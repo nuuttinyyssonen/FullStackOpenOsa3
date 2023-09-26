@@ -6,6 +6,8 @@ import './css/addPerson.css'
 function AddPerson({persons, setPersons, newName, setNewName, newNumber, setNewNumber, filterPersonInput}) {
 
     const [successMessage, setSuccessMessage] = useState("Added " + newName)
+    const [validationError, setValidationError] = useState("")
+    const [validationErrorBoolean, setValidationErrorBoolean] = useState(false)
     const [personAdded, setPersonAdded] = useState(false)
     const [cathcError, setCatchError] = useState("")
 
@@ -61,13 +63,24 @@ function AddPerson({persons, setPersons, newName, setNewName, newNumber, setNewN
             number: newNumber
             }
 
-            PhonebookService.create(newObj).then(person => {
-                PhonebookService.getAll().then(persons => {
-                    console.log(persons)
-                    setPersons(persons)
+            PhonebookService.create(newObj)
+                .then(person => {
+                    PhonebookService.getAll().then(persons => {
+                        console.log(persons)
+                        setPersons(persons)
+                        setPersonAdded(true)
+                    })
                 })
-            })
-            setPersonAdded(true)
+                .catch(error => {
+                    if (error.response && error.response.data && error.response.data.error) {
+                        const errorMessage = error.response.data.error;
+                        console.error(errorMessage); 
+                        setValidationError(errorMessage);
+                        setValidationErrorBoolean(true);
+                    } else {
+                        console.error(error); 
+                    }
+                })
 
         }
     }
@@ -95,6 +108,7 @@ function AddPerson({persons, setPersons, newName, setNewName, newNumber, setNewN
             </div>
             </form>
             <br/>
+            <h1 className="error">{validationErrorBoolean ? validationError : ""}</h1>
             <h1 className="success">{personAdded ? successMessage : ""}</h1>
             <h1 className="error">{cathcError}</h1>
         </div>

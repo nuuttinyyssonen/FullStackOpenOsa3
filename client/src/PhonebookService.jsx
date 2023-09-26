@@ -27,7 +27,7 @@ const getId = (name) => {
         let persons = response.data
         for(let i = 0; i < persons.length; i++) {
             if(persons[i].name == name) {
-                return persons[i].id
+                return persons[i]._id
             }
         }
     })
@@ -38,5 +38,5 @@ export default {
     create: create,
     deleteRecord: deleteRecord,
     update: update,
-    getId: getId
+    getId: getId,
 }

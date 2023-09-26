@@ -6,6 +6,7 @@ function Persons({persons, setPersons, filterPersonInput}) {
     const deletePerson = (id, person) => {
         if(confirm("Delete " + person + " ?")) {
             PhonebookService.deleteRecord(id).then(response => {
+                console.log(response)
                 PhonebookService.getAll().then(persons => {
                     setPersons(persons)
                 })
@@ -17,7 +18,7 @@ function Persons({persons, setPersons, filterPersonInput}) {
         if (persons !== undefined) {
           return persons.map((person, key) => (
             <div key={key}>
-              <h3>{person.name} {person.number} <button onClick={() => deletePerson(person.id, person.name)}>delete</button></h3>
+                <h3>{person.name} {person.number} <button onClick={() => deletePerson(person._id, person.name)}>delete</button></h3>
             </div>
           ));
         } else {
@@ -32,7 +33,7 @@ function Persons({persons, setPersons, filterPersonInput}) {
             if (testPerson.startsWith(filterPersonInput)) {
             return(
                 <div key={key}>
-                <h3>{person.name} {person.number} <button onClick={() => deletePerson(person.id)}>delete</button></h3>
+                    <h3>{person.name} {person.number} <button onClick={() => deletePerson(person.id)}>delete</button></h3>
                 </div>
             )
             }
